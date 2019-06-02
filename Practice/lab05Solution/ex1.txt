@@ -1,0 +1,32 @@
+The reason for our program not killig the shell is that it(our program) DOES NOT overwrite the shell.
+
+The shell, whenever it executes any of our programs such as Firefox, Thinderbird etc., does a fork()
+first (in the background i.e. you don't see it...) & then does an exec() inside that
+newly created child.
+
+It's something like this:
+
+.......
+.......
+this is SHELL's 'imaginary' code... 
+.......
+.......
+
+if(fork() == 0)
+	execlp("firefox", "firefox", NULL);
+
+.......
+Rest of the SHELL's code continues...
+.......
+.......
+
+
+As you can see, shell is launching our applications inside a dedicated child process & overwriting that
+subsequently, NOT ITSELF.
+
+
+If you really want the shell getting killed, having launched your program, you can use:
+
+"exec program-name"
+
+"exec" is actually bash itself (it's a bash-builtin). Thus it overwrites itself & gets vanished.
